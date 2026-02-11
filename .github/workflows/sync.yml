@@ -1,0 +1,49 @@
+name: Sync Upstream
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Hourly at minute 0
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Setup merge=ours driver
+        run: |
+          git config merge.ours.driver true
+
+      - name: Add upstream remote
+        run: git remote add upstream https://github.com/open-webui/open-webui.git || true
+
+      - name: Fetch upstream
+        run: git fetch upstream
+
+      - name: Merge upstream/main
+        run: |
+          git merge upstream/main --no-edit --allow-unrelated-histories || {
+            echo "::warning::Merge conflict detected, attempting resolution..."
+            # Auto-resolve conflicts on custom files (ours strategy)
+            git checkout --ours .gitattributes docker-compose.yaml .dockerignore searxng-setup/ || true
+            git add .gitattributes docker-compose.yaml .dockerignore searxng-setup/ || true
+            # If remaining conflicts exist, fail the workflow
+            if git diff --name-only --diff-filter=U | grep -q .; then
+              echo "::error::Unresolved merge conflicts remain:"
+              git diff --name-only --diff-filter=U
+              exit 1
+            fi
+            git commit --no-edit
+          }
+
+      - name: Push changes
+        run: git push origin main

@@ -47,3 +47,11 @@
 # Misc
 *.env text eol=lf
 *.lock text eol=lf
+
+# ============================================
+# StardawnAI custom files - keep ours on merge
+# ============================================
+searxng-setup/** merge=ours
+docker-compose.yaml merge=ours
+.gitattributes merge=ours
+.dockerignore merge=ours
