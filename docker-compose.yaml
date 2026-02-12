@@ -22,15 +22,27 @@ services:
     container_name: searxng
     image: 'searxng/searxng:latest'
     volumes:
-      - ./searxng-setup/searxng:/etc/searxng
+      - type: bind
+        source: ./searxng-setup/searxng/settings.yml
+        target: /etc/searxng/settings.yml
+      - type: bind
+        source: ./searxng-setup/searxng/limiter.toml
+        target: /etc/searxng/limiter.toml
     environment:
       - SEARXNG_BASE_URL=http://searxng:8080/
       - SEARXNG_BIND_ADDRESS=0.0.0.0
       - SEARXNG_SECRET=ChangeMe123RandomKey!!
       - SEARXNG_LIMITER=false
+      # Force empty proxies via ENV backup explicitly
+      - SEARXNG_BOTDETECTION__TRUSTED_PROXIES=
     expose:
       - "8080"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
     logging:
       driver: json-file
       options:
