@@ -1,44 +1,35 @@
 services:
   open-webui:
-    image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG:-main}
+    image: 'ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG:-main}'
     pull_policy: always
     container_name: open-webui
     volumes:
-      - open-webui:/app/backend/data
+      - 'open-webui:/app/backend/data'
     expose:
       - '8080'
     environment:
       - 'OLLAMA_BASE_URL=http://host.docker.internal:11434'
-      - 'WEBUI_SECRET_KEY='
-      - 'ENABLE_RAG_WEB_SEARCH=true'
-      - 'RAG_WEB_SEARCH_ENGINE=searxng'
+      - WEBUI_SECRET_KEY=
+      - ENABLE_RAG_WEB_SEARCH=true
+      - RAG_WEB_SEARCH_ENGINE=searxng
       - 'SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>&format=json'
     extra_hosts:
-      - host.docker.internal:host-gateway
+      - 'host.docker.internal:host-gateway'
     restart: unless-stopped
 
   searxng:
-    image: searxng/searxng:latest
+    image: 'searxng/searxng:latest'
     container_name: searxng
     volumes:
       - type: bind
         source: ./searxng-settings.yml
         target: /etc/searxng/settings.yml
-        content: |
-          use_default_settings: true
-          search:
-            formats:
-              - html
-              - json
-          server:
-            limiter: false
-            public_instance: false
     restart: unless-stopped
     logging:
-      driver: "json-file"
+      driver: json-file
       options:
-        max-size: "1m"
-        max-file: "1"
+        max-size: 1m
+        max-file: '1'
 
 volumes:
   open-webui: {}
