@@ -26,6 +26,10 @@ services:
       - type: bind
         source: ./searxng-settings.yml
         target: /etc/searxng/settings.yml
+    environment:
+      - SEARXNG_BASE_URL=http://searxng:8080/
+    expose:
+      - "8080"
     restart: unless-stopped
     logging:
       driver: json-file

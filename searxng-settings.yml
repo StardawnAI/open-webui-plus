@@ -13,7 +13,7 @@ search:
 server:
   port: 8080
   bind_address: "0.0.0.0"
-  secret_key: "ultrasecretkey"
+  secret_key: "ChangeMeToSomethingSecureAndRandom123!"
   limiter: false
   image_proxy: true
   public_instance: false
