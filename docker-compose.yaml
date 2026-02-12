@@ -33,10 +33,13 @@ services:
       - SEARXNG_BIND_ADDRESS=0.0.0.0
       - SEARXNG_SECRET=ChangeMe123RandomKey!!
       - SEARXNG_LIMITER=false
-      # Force empty proxies via ENV backup explicitly
+      - SEARXNG_REDIS_URL=bool:false
       - SEARXNG_BOTDETECTION__TRUSTED_PROXIES=
     expose:
       - "8080"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1"]
