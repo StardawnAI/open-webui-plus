@@ -20,7 +20,7 @@ services:
 
   searxng:
     container_name: searxng
-    image: 'searxng/searxng:2025.1.27-3191d92'
+    image: 'searxng/searxng:2024.12.23-e287413'
     volumes:
       - type: bind
         source: ./searxng-setup/searxng/settings.yml
