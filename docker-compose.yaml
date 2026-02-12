@@ -21,7 +21,18 @@ services:
     image: searxng/searxng:latest
     container_name: searxng
     volumes:
-      - ./searxng-setup/searxng:/etc/searxng:rw
+      - type: bind
+        source: ./searxng-settings.yml
+        target: /etc/searxng/settings.yml
+        content: |
+          use_default_settings: true
+          search:
+            formats:
+              - html
+              - json
+          server:
+            limiter: false
+            public_instance: false
     restart: unless-stopped
     logging:
       driver: "json-file"
