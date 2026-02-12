@@ -22,12 +22,7 @@ services:
     container_name: searxng
     image: 'searxng/searxng:latest'
     volumes:
-      - type: bind
-        source: ./searxng-setup/searxng/settings.yml
-        target: /etc/searxng/settings.yml
-      - type: bind
-        source: ./searxng-setup/searxng/limiter.toml
-        target: /etc/searxng/limiter.toml
+      - ./searxng-setup/searxng:/etc/searxng
     environment:
       - SEARXNG_BASE_URL=http://searxng:8080/
       - SEARXNG_BIND_ADDRESS=0.0.0.0
