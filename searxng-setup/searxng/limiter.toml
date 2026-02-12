@@ -1,0 +1,8 @@
+[botdetection]
+# Empty list ensures internal Docker IPs are NOT treated as proxies
+# This stops SearXNG from expecting X-Forwarded-For headers from Open WebUI
+trusted_proxies = []
+
+[botdetection.ip_limit]
+# Disable link token to start simple
+link_token = false
