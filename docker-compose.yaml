@@ -24,9 +24,10 @@ services:
     volumes:
       - ./searxng-setup/searxng:/etc/searxng
     environment:
-      - SEARXNG_BASE_URL=http://searxng:8080/
+      - 'SEARXNG_BASE_URL=http://searxng:8080/'
       - SEARXNG_BIND_ADDRESS=0.0.0.0
       - SEARXNG_SECRET=ChangeMe123RandomKey!!
+      - SEARXNG_LIMITER=false
     expose:
       - "8080"
     restart: unless-stopped
