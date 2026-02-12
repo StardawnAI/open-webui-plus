@@ -2,7 +2,6 @@ services:
   open-webui:
     image: 'ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG:-main}'
     pull_policy: always
-    container_name: open-webui
     volumes:
       - 'open-webui:/app/backend/data'
     expose:
@@ -20,14 +19,14 @@ services:
       - searxng
 
   searxng:
-    image: 'searxng/searxng:latest'
     container_name: searxng
+    image: 'searxng/searxng:latest'
     volumes:
-      - type: bind
-        source: ./searxng-settings.yml
-        target: /etc/searxng/settings.yml
+      - ./searxng-setup/searxng/settings.yml:/etc/searxng/settings.yml
     environment:
       - SEARXNG_BASE_URL=http://searxng:8080/
+      - SEARXNG_BIND_ADDRESS=0.0.0.0
+      - SEARXNG_SECRET=ChangeMe123RandomKey!!
     expose:
       - "8080"
     restart: unless-stopped
