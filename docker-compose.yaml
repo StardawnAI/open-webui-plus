@@ -1,25 +1,14 @@
 services:
-  ollama:
-    volumes:
-      - ollama:/root/.ollama
-    container_name: ollama
-    pull_policy: always
-    tty: true
-    restart: unless-stopped
-    image: ollama/ollama:${OLLAMA_DOCKER_TAG-latest}
-
   open-webui:
     image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG:-main}
     pull_policy: always
     container_name: open-webui
     volumes:
       - open-webui:/app/backend/data
-    depends_on:
-      - ollama
     expose:
       - '8080'
     environment:
-      - 'OLLAMA_BASE_URL=http://ollama:11434'
+      - 'OLLAMA_BASE_URL=http://host.docker.internal:11434'
       - 'WEBUI_SECRET_KEY='
       - 'ENABLE_RAG_WEB_SEARCH=true'
       - 'RAG_WEB_SEARCH_ENGINE=searxng'
@@ -41,5 +30,4 @@ services:
         max-file: "1"
 
 volumes:
-  ollama: {}
   open-webui: {}
